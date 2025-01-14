@@ -1,4 +1,9 @@
+import os
 import streamlit as st
+
+# Ensure required libraries are installed
+os.system('pip install streamlit-option-menu')
+
 from streamlit_option_menu import option_menu
 
 # Set Page Configuration
