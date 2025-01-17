@@ -1,36 +1,32 @@
-import os
-import json
-from datetime import datetime
 import streamlit as st
 from streamlit_option_menu import option_menu
+import firebase_admin
+from firebase_admin import credentials, firestore
+from datetime import datetime
 
-# Functions to handle user data
-def get_user_data():
-    """Load user data from a JSON file."""
-    if not os.path.exists("users.json"):
-        return {"users": [], "current_users": 0}
-    with open("users.json", "r") as file:
-        return json.load(file)
+# Firebase Configuration
+# Initialize Firebase
+cred = credentials.Certificate("pbcalc-firebase-adminsdk-fbsvc-c109c8c5fe.json")  # Path to your Firebase key file
+if not firebase_admin._apps:
+    firebase_admin.initialize_app(cred)
 
-def save_user_data(data):
-    """Save user data to a JSON file."""
-    with open("users.json", "w") as file:
-        json.dump(data, file, indent=4)
+db = firestore.client()
 
-def add_user(username):
-    """Add a new user to the database."""
-    data = get_user_data()
+# Firebase Functions
+def add_user_to_firebase(username):
+    """Add a user to the Firestore database."""
     timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    data["users"].append({"username": username, "timestamp": timestamp})
-    data["current_users"] += 1
-    save_user_data(data)
+    db.collection("users").add({"username": username, "timestamp": timestamp})
 
-def remove_user():
-    """Remove a user (decrease real-time user count)."""
-    data = get_user_data()
-    if data["current_users"] > 0:
-        data["current_users"] -= 1
-    save_user_data(data)
+def get_users_from_firebase():
+    """Retrieve all users from the Firestore database."""
+    users = db.collection("users").stream()
+    return [{"id": user.id, **user.to_dict()} for user in users]
+
+def get_active_user_count():
+    """Count active users (if needed for real-time updates)."""
+    users = get_users_from_firebase()
+    return len(users)
 
 # Streamlit App Configuration
 st.set_page_config(page_title="Pendapatan Bersih Calculator", page_icon="📊", layout="centered")
@@ -91,13 +87,11 @@ with st.sidebar:
     # User Login
     username = st.text_input("Enter your username:", value="", placeholder="Type your name here")
     if username:
-        add_user(username)
+        add_user_to_firebase(username)
         st.success(f"Welcome, {username}! You are now using the app.")
-    else:
-        st.warning("Please enter your username to proceed.")
 
-# Load user data
-user_data = get_user_data()
+# Display Active Users
+users = get_users_from_firebase()
 
 if selected == "Home":
     # Title and Description
@@ -136,13 +130,7 @@ elif selected == "About":
     st.header("About")
     st.write("This calculator helps doctors calculate their net income quickly and easily.")
 
-# Display Current and Total Users
+# Sidebar: Show User Statistics
 st.sidebar.markdown("---")
 st.sidebar.markdown("### 📊 User Statistics")
-st.sidebar.write(f"Total Users: {len(user_data['users'])}")
-st.sidebar.write(f"Real-Time Users: {user_data['current_users']}")
-
-# Remove a user when they leave the app
-if st.button("Exit App"):
-    remove_user()
-    st.success("You have exited the app.")
+st.sidebar.write(f"Total Users: {len(users)}")
