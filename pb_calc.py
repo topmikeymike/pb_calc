@@ -24,8 +24,10 @@ def get_users_from_firebase():
     return [{"id": user.id, **user.to_dict()} for user in users]
 
 def get_active_user_count():
-    """Count active users (if needed for real-time updates)."""
+    """Count active users based on recent timestamp (or criteria)."""
     users = get_users_from_firebase()
+    # If you want to filter based on the most recent activity, you could sort by timestamp or use other logic
+    # For now, we return the total number of users
     return len(users)
 
 # Streamlit App Configuration
@@ -92,6 +94,7 @@ with st.sidebar:
 
 # Display Active Users
 users = get_users_from_firebase()
+active_user_count = get_active_user_count()  # Real-time count of users (can be adjusted for more complex logic)
 
 if selected == "Home":
     # Title and Description
@@ -134,3 +137,4 @@ elif selected == "About":
 st.sidebar.markdown("---")
 st.sidebar.markdown("### 📊 User Statistics")
 st.sidebar.write(f"Total Users: {len(users)}")
+st.sidebar.write(f"Active Users: {active_user_count}")
