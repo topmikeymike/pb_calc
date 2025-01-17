@@ -7,27 +7,40 @@ from datetime import datetime
 # Firebase Configuration
 # Initialize Firebase
 cred = credentials.Certificate("pbcalc-firebase-adminsdk-fbsvc-c109c8c5fe.json")  # Path to your Firebase key file
+
 if not firebase_admin._apps:
-    firebase_admin.initialize_app(cred)
+    try:
+        firebase_admin.initialize_app(cred)
+        print("Firebase app initialized!")
+    except Exception as e:
+        print(f"Error initializing Firebase app: {e}")
 
 db = firestore.client()
 
 # Firebase Functions
 def add_user_to_firebase(username):
     """Add a user to the Firestore database."""
-    timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    db.collection("users").add({"username": username, "timestamp": timestamp})
+    try:
+        timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        db.collection("users").add({"username": username, "timestamp": timestamp})
+        print(f"User {username} added to Firestore successfully!")
+    except Exception as e:
+        print(f"Error adding user {username} to Firestore: {e}")
+        st.error(f"Failed to add user {username} to the database.")
 
 def get_users_from_firebase():
     """Retrieve all users from the Firestore database."""
-    users = db.collection("users").stream()
-    return [{"id": user.id, **user.to_dict()} for user in users]
+    try:
+        users = db.collection("users").stream()
+        return [{"id": user.id, **user.to_dict()} for user in users]
+    except Exception as e:
+        print(f"Error retrieving users from Firestore: {e}")
+        st.error("Failed to retrieve users from the database.")
+        return []
 
 def get_active_user_count():
-    """Count active users based on recent timestamp (or criteria)."""
+    """Count active users (if needed for real-time updates)."""
     users = get_users_from_firebase()
-    # If you want to filter based on the most recent activity, you could sort by timestamp or use other logic
-    # For now, we return the total number of users
     return len(users)
 
 # Streamlit App Configuration
@@ -94,7 +107,6 @@ with st.sidebar:
 
 # Display Active Users
 users = get_users_from_firebase()
-active_user_count = get_active_user_count()  # Real-time count of users (can be adjusted for more complex logic)
 
 if selected == "Home":
     # Title and Description
@@ -137,4 +149,3 @@ elif selected == "About":
 st.sidebar.markdown("---")
 st.sidebar.markdown("### 📊 User Statistics")
 st.sidebar.write(f"Total Users: {len(users)}")
-st.sidebar.write(f"Active Users: {active_user_count}")
