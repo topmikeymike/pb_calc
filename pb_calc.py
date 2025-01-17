@@ -1,49 +1,12 @@
+import os
 import streamlit as st
+
+# Ensure required libraries are installed
+os.system('pip install streamlit-option-menu')
+
 from streamlit_option_menu import option_menu
-import firebase_admin
-from firebase_admin import credentials, firestore
-from datetime import datetime
 
-# Firebase Configuration
-# Initialize Firebase
-cred = credentials.Certificate("pbcalc-firebase-adminsdk-fbsvc-c109c8c5fe.json")  # Path to your Firebase key file
-
-if not firebase_admin._apps:
-    try:
-        firebase_admin.initialize_app(cred)
-        print("Firebase app initialized!")
-    except Exception as e:
-        print(f"Error initializing Firebase app: {e}")
-
-db = firestore.client()
-
-# Firebase Functions
-def add_user_to_firebase(username):
-    """Add a user to the Firestore database."""
-    try:
-        timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        db.collection("users").add({"username": username, "timestamp": timestamp})
-        print(f"User {username} added to Firestore successfully!")
-    except Exception as e:
-        print(f"Error adding user {username} to Firestore: {e}")
-        st.error(f"Failed to add user {username} to the database.")
-
-def get_users_from_firebase():
-    """Retrieve all users from the Firestore database."""
-    try:
-        users = db.collection("users").stream()
-        return [{"id": user.id, **user.to_dict()} for user in users]
-    except Exception as e:
-        print(f"Error retrieving users from Firestore: {e}")
-        st.error("Failed to retrieve users from the database.")
-        return []
-
-def get_active_user_count():
-    """Count active users (if needed for real-time updates)."""
-    users = get_users_from_firebase()
-    return len(users)
-
-# Streamlit App Configuration
+# Set Page Configuration
 st.set_page_config(page_title="Pendapatan Bersih Calculator", page_icon="📊", layout="centered")
 
 # Custom CSS for Aesthetic Styling
@@ -89,6 +52,11 @@ st.markdown(
     unsafe_allow_html=True
 )
 
+# Title and Description
+st.title("📊 Pendapatan Bersih Calculator")
+st.write("Welcome! Use this tool to calculate your **Pendapatan Bersih (Net Income)** with ease and clarity.")
+st.markdown("---")
+
 # Sidebar Navigation
 with st.sidebar:
     selected = option_menu(
@@ -99,21 +67,7 @@ with st.sidebar:
         default_index=0,
     )
 
-    # User Login
-    username = st.text_input("Enter your username:", value="", placeholder="Type your name here")
-    if username:
-        add_user_to_firebase(username)
-        st.success(f"Welcome, {username}! You are now using the app.")
-
-# Display Active Users
-users = get_users_from_firebase()
-
 if selected == "Home":
-    # Title and Description
-    st.title("📊 Pendapatan Bersih Calculator")
-    st.write("Welcome! Use this tool to calculate your **Pendapatan Bersih (Net Income)** with ease and clarity.")
-    st.markdown("---")
-
     # Input Fields
     st.header("Input Details")
     pendapatan_kasar = st.number_input("Pendapatan Kasar (Gross Income) in RM:", min_value=0, value=0, step=1)
@@ -143,9 +97,4 @@ if selected == "Home":
 
 elif selected == "About":
     st.header("About")
-    st.write("This calculator helps doctors calculate their net income quickly and easily.")
-
-# Sidebar: Show User Statistics
-st.sidebar.markdown("---")
-st.sidebar.markdown("### 📊 User Statistics")
-st.sidebar.write(f"Total Users: {len(users)}")
+    st.write("This calculator to help doctor to calculate their net-income fast and easy huhu ")
