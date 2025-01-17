@@ -1,12 +1,38 @@
 import os
+import json
+from datetime import datetime
 import streamlit as st
-
-# Ensure required libraries are installed
-os.system('pip install streamlit-option-menu')
-
 from streamlit_option_menu import option_menu
 
-# Set Page Configuration
+# Functions to handle user data
+def get_user_data():
+    """Load user data from a JSON file."""
+    if not os.path.exists("users.json"):
+        return {"users": [], "current_users": 0}
+    with open("users.json", "r") as file:
+        return json.load(file)
+
+def save_user_data(data):
+    """Save user data to a JSON file."""
+    with open("users.json", "w") as file:
+        json.dump(data, file, indent=4)
+
+def add_user(username):
+    """Add a new user to the database."""
+    data = get_user_data()
+    timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    data["users"].append({"username": username, "timestamp": timestamp})
+    data["current_users"] += 1
+    save_user_data(data)
+
+def remove_user():
+    """Remove a user (decrease real-time user count)."""
+    data = get_user_data()
+    if data["current_users"] > 0:
+        data["current_users"] -= 1
+    save_user_data(data)
+
+# Streamlit App Configuration
 st.set_page_config(page_title="Pendapatan Bersih Calculator", page_icon="📊", layout="centered")
 
 # Custom CSS for Aesthetic Styling
@@ -52,11 +78,6 @@ st.markdown(
     unsafe_allow_html=True
 )
 
-# Title and Description
-st.title("📊 Pendapatan Bersih Calculator")
-st.write("Welcome! Use this tool to calculate your **Pendapatan Bersih (Net Income)** with ease and clarity.")
-st.markdown("---")
-
 # Sidebar Navigation
 with st.sidebar:
     selected = option_menu(
@@ -67,7 +88,23 @@ with st.sidebar:
         default_index=0,
     )
 
+    # User Login
+    username = st.text_input("Enter your username:", value="", placeholder="Type your name here")
+    if username:
+        add_user(username)
+        st.success(f"Welcome, {username}! You are now using the app.")
+    else:
+        st.warning("Please enter your username to proceed.")
+
+# Load user data
+user_data = get_user_data()
+
 if selected == "Home":
+    # Title and Description
+    st.title("📊 Pendapatan Bersih Calculator")
+    st.write("Welcome! Use this tool to calculate your **Pendapatan Bersih (Net Income)** with ease and clarity.")
+    st.markdown("---")
+
     # Input Fields
     st.header("Input Details")
     pendapatan_kasar = st.number_input("Pendapatan Kasar (Gross Income) in RM:", min_value=0, value=0, step=1)
@@ -97,4 +134,15 @@ if selected == "Home":
 
 elif selected == "About":
     st.header("About")
-    st.write("This calculator to help doctor to calculate their net-income fast and easy huhu ")
+    st.write("This calculator helps doctors calculate their net income quickly and easily.")
+
+# Display Current and Total Users
+st.sidebar.markdown("---")
+st.sidebar.markdown("### 📊 User Statistics")
+st.sidebar.write(f"Total Users: {len(user_data['users'])}")
+st.sidebar.write(f"Real-Time Users: {user_data['current_users']}")
+
+# Remove a user when they leave the app
+if st.button("Exit App"):
+    remove_user()
+    st.success("You have exited the app.")
