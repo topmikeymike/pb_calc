@@ -7,7 +7,7 @@ os.system('pip install streamlit-option-menu')
 from streamlit_option_menu import option_menu
 
 # Set Page Configuration
-st.set_page_config(page_title="Pendapatan Bersih Calculator", page_icon="📊", layout="centered")
+st.set_page_config(page_title="KKAB WEST PENDAPATAN BERSIH CALCULATOR", page_icon="📊", layout="centered")
 
 # Custom CSS for Aesthetic Styling
 st.markdown(
