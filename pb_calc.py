@@ -53,7 +53,7 @@ st.markdown(
 )
 
 # Title and Description
-st.title("📊 Pendapatan Bersih Calculator")
+st.title("📊 KKAB WEST PENDAPATAN BERSIH CALCULATOR")
 st.write("Welcome! Use this tool to calculate your **Pendapatan Bersih (Net Income)** with ease and clarity.")
 st.markdown("---")
 
