@@ -7,7 +7,7 @@ os.system('pip install streamlit-option-menu')
 from streamlit_option_menu import option_menu
 
 # Set Page Configuration
-st.set_page_config(page_title="KKAB WEST PENDAPATAN BERSIH CALCULATOR", page_icon="📊", layout="centered")
+st.set_page_config(page_title="PENDAPATAN BERSIH CALCULATOR", page_icon="📊", layout="centered")
 
 # Custom CSS for Aesthetic Styling
 st.markdown(
@@ -53,7 +53,7 @@ st.markdown(
 )
 
 # Title and Description
-st.title("📊 KKAB WEST PENDAPATAN BERSIH CALCULATOR")
+st.title("📊 PENDAPATAN BERSIH CALCULATOR")
 st.write("Welcome! Use this tool to calculate your **Pendapatan Bersih (Net Income)** with ease and clarity.")
 st.markdown("---")
 
