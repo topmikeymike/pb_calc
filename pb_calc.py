@@ -88,10 +88,10 @@ if selected == "Home":
 
     with col1:
         st.metric(label="💉 Total First Aid Cost", value=f"RM {TOTAL_FIRST_AID}")
-        st.metric(label="⚪ Total Whitezone Cost", value=f"RM {TOTAL_WHITEZONE}")
+        st.metric(label="⚪ Total Tax Whitezone Cost", value=f"RM {TOTAL_WHITEZONE}")
 
     with col2:
-        st.metric(label="🎉 Total Event Cost", value=f"RM {TOTAL_EVENT}")
+        st.metric(label="🎉 Total Tax Event Cost", value=f"RM {TOTAL_EVENT}")
 
     st.markdown("<div class='highlighted'>💰 Pendapatan Bersih: RM {}</div>".format(PENDAPATAN_BERSIH), unsafe_allow_html=True)
 
