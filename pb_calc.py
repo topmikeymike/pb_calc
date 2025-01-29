@@ -1,5 +1,6 @@
 import os
 import streamlit as st
+import math 
 
 # Ensure required libraries are installed
 os.system('pip install streamlit-option-menu')
