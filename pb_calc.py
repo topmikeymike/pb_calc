@@ -61,7 +61,7 @@ st.markdown("---")
 with st.sidebar:
     selected = option_menu(
         "📌 Choose Your Calculator",
-        ["🩺 Calculator V1 – (If You Remember First Aid Count)", "🧮 Calculator V2 – (If You Don't Remember First Aid Count)"],
+        ["🩺 Calculator V1 – (If You Remember First Aid Count)", "🧮 Calculator V2 BETA – (If You Don't Remember First Aid Count)"],
         icons=["calculator", "clipboard-list"],
         menu_icon="layers",
         default_index=0,
@@ -99,7 +99,7 @@ if selected == "🩺 Calculator V1 – (If You Remember First Aid Count)":
         
     st.markdown("<div class='highlighted'>💰 Pendapatan Bersih: RM {}</div>".format(PENDAPATAN_BERSIH), unsafe_allow_html=True)
 
-elif selected == "🧮 Calculator V2 – (If You Don't Remember First Aid Count)":
+elif selected == "🧮 Calculator V2 BETA – (If You Don't Remember First Aid Count)":
 
      # Input Fields
     st.header("Input Details")
