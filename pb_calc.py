@@ -7,7 +7,7 @@ os.system('pip install streamlit-option-menu')
 from streamlit_option_menu import option_menu
 
 # Set Page Configuration
-st.set_page_config(page_title="PENDAPATAN BERSIH CALCULATOR", page_icon="📊", layout="centered")
+st.set_page_config(page_title="Pendapatan Bersih Calculator", page_icon="📊", layout="centered")
 
 # Custom CSS for Aesthetic Styling
 st.markdown(
@@ -53,22 +53,23 @@ st.markdown(
 )
 
 # Title and Description
-st.title("📊 PENDAPATAN BERSIH CALCULATOR")
+st.title("📊 Pendapatan Bersih Calculator")
 st.write("Welcome! Use this tool to calculate your **Pendapatan Bersih (Net Income)** with ease and clarity.")
 st.markdown("---")
 
 # Sidebar Navigation
 with st.sidebar:
     selected = option_menu(
-        "Navigation",
-        ["Home", "About"],
-        icons=["house", "info-circle"],
-        menu_icon="cast",
+        "📌 Choose Your Calculator",
+        ["🩺 Calculator V1 – (If You Remember First Aid Count)", "🧮 Calculator V2 – (If You Don't Remember First Aid Count)"],
+        icons=["calculator", "clipboard-list"],
+        menu_icon="layers",
         default_index=0,
     )
 
-if selected == "Home":
-    # Input Fields
+
+if selected == "🩺 Calculator V1 – (If You Remember First Aid Count)":
+ # Input Fields
     st.header("Input Details")
     pendapatan_kasar = st.number_input("Pendapatan Kasar (Gross Income) in RM:", min_value=0, value=0, step=1)
     total_firstaid = st.number_input("Total First Aid Count:", min_value=0, value=0, step=1)
@@ -87,14 +88,54 @@ if selected == "Home":
     col1, col2 = st.columns(2)
 
     with col1:
+        st.subheader("💉 Treatments & Costs")
         st.metric(label="💉 Total First Aid Cost", value=f"RM {TOTAL_FIRST_AID}")
-        st.metric(label="⚪ Total Tax Whitezone Cost", value=f"RM {TOTAL_WHITEZONE}")
+        
 
     with col2:
+        st.subheader("💼 Taxes")
+        st.metric(label="⚪ Total Tax Whitezone Cost", value=f"RM {TOTAL_WHITEZONE}")
         st.metric(label="🎉 Total Tax Event Cost", value=f"RM {TOTAL_EVENT}")
-
+        
     st.markdown("<div class='highlighted'>💰 Pendapatan Bersih: RM {}</div>".format(PENDAPATAN_BERSIH), unsafe_allow_html=True)
 
-elif selected == "About":
-    st.header("About")
-    st.write("This calculator to help doctor to calculate their net-income fast and easy huhu ")
+elif selected == "🧮 Calculator V2 – (If You Don't Remember First Aid Count)":
+
+     # Input Fields
+    st.header("Input Details")
+    pendapatan_kasar = st.number_input("Pendapatan Kasar (Gross Income) in RM:", min_value=0, value=0, step=1)
+
+    # Calculate Estimated First Aid Used
+    estimated_first_aid_used = (pendapatan_kasar * 2) // 1000  # Take only the number before last three zeros
+    total_first_aid_cost = estimated_first_aid_used * 200  # Each first aid costs RM200
+
+    # Inputs for Whitezone and Event Tax
+    whitezone_count = st.number_input("Enter the number of Whitezone Tax Units:", min_value=0, value=0, step=1)
+    event_count = st.number_input("Enter the number of Event Tax Units:", min_value=0, value=0, step=1)
+
+    # Calculate total whitezone and event taxes
+    total_whitezone_tax = whitezone_count * 50
+    total_event_tax = event_count * 50
+
+    # Display Results
+    st.markdown("---")
+    st.header("Results")
+    
+    col1, col2 = st.columns(2)
+
+    with col1:
+        st.subheader("💉 Treatments & Costs")
+        st.metric(label="Estimated First Aid Used", value=f"{int(estimated_first_aid_used)}")
+        st.metric(label="Total First Aid Cost", value=f"RM {total_first_aid_cost}")
+        
+    with col2:
+        st.subheader("💼 Taxes")
+        st.metric(label="Total Whitezone Tax", value=f"RM {total_whitezone_tax}")
+        st.metric(label="Total Event Tax", value=f"RM {total_event_tax}")
+
+    # Calculate Pendapatan Bersih (Net Income after taxes and first aid cost)
+    total_tax = total_whitezone_tax + total_event_tax
+    PENDAPATAN_BERSIH = pendapatan_kasar - total_first_aid_cost - total_tax
+
+    st.markdown("<div class='highlighted'>💰 Pendapatan Bersih: RM {}</div>".format(int(PENDAPATAN_BERSIH)), unsafe_allow_html=True)
+
