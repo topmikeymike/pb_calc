@@ -78,7 +78,7 @@ if selected == "🩺 Calculator V1 – (If You Remember First Aid Count)":
     event = st.number_input("Total Event Count:", min_value=0, value=0, step=1)
 
     # Calculations
-    TOTAL_FIRST_AID = total_firstaid * 200
+    TOTAL_FIRST_AID = total_firstaid * 150
     TOTAL_WHITEZONE = whitezone * 50
     TOTAL_EVENT = event * 50
     PENDAPATAN_BERSIH = pendapatan_kasar - TOTAL_FIRST_AID - TOTAL_WHITEZONE - TOTAL_EVENT
@@ -108,7 +108,7 @@ elif selected == "🧮 Calculator V2 BETA – (If You Don't Remember First Aid C
 
     # Calculate Estimated First Aid Used
     estimated_first_aid_used = math.ceil(pendapatan_kasar * 2 / 1000)  # Always round up
-    total_first_aid_cost = estimated_first_aid_used * 200  # Each first aid costs RM200
+    total_first_aid_cost = estimated_first_aid_used * 150  # Each first aid costs RM200
 
     # Inputs for Whitezone and Event Tax
     whitezone_count = st.number_input("Enter the number of Whitezone Tax Units:", min_value=0, value=0, step=1)
