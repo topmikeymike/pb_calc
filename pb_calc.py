@@ -100,7 +100,7 @@ if selected == "🩺 Calculator V1 – (If You Remember First Aid Count)":
         
     st.markdown("<div class='highlighted'>💰 Pendapatan Bersih: RM {}</div>".format(PENDAPATAN_BERSIH), unsafe_allow_html=True)
 
-elif selected == "🧮 Calculator V2 BETA – (If You Don't Remember First Aid Count)":
+elif selected == "🧮 Calculator V2 BETA – (Best used if you're taking cases in Bandar. Not Recommended to be used in SS/PB cases)":
 
     # Input Fields
     st.header("Input Details")
