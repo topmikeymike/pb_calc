@@ -107,7 +107,7 @@ elif selected == "🧮 Calculator V2 BETA – (If You Don't Remember First Aid C
     pendapatan_kasar = st.number_input("Pendapatan Kasar (Gross Income) in RM:", min_value=0, value=0, step=1)
 
     # Calculate Estimated First Aid Used
-    estimated_first_aid_used = math.ceil(pendapatan_kasar * 2.22 / 1000)  # Always round up
+    estimated_first_aid_used = round(pendapatan_kasar * 2.22 / 1000)  # Always round up
     total_first_aid_cost = estimated_first_aid_used * 150  # Each first aid costs RM200
 
     # Inputs for Whitezone and Event Tax
