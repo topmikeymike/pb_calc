@@ -102,27 +102,21 @@ if selected == "🩺 Calculator V1 – (If You Remember First Aid Count)":
 
 elif selected == "🧮 Calculator V2 BETA – (If You Don't Remember First Aid Count)":
 
-    # Input Fields
+     # Input Fields
     st.header("Input Details")
     pendapatan_kasar = st.number_input("Pendapatan Kasar (Gross Income) in RM:", min_value=0, value=0, step=1)
 
-    # Step 1: Apply Automatic 10% Deduction
-    adjusted_income = pendapatan_kasar * 0.90
+    # Calculate Estimated First Aid Used
+    estimated_first_aid_used = round(pendapatan_kasar * 2.22 / 1000)  # Always round up
+    total_first_aid_cost = estimated_first_aid_used * 150  # Each first aid costs RM200
 
-    # Step 2: Calculate Estimated First Aid Used
-    estimated_first_aid_used = math.ceil(pendapatan_kasar * 2 / 1000)  # Always round up
-    total_first_aid_cost = estimated_first_aid_used * 150  # Each first aid costs RM150
-
-    # Step 3: Inputs for Whitezone and Event Tax
+    # Inputs for Whitezone and Event Tax
     whitezone_count = st.number_input("Enter the number of Whitezone Tax Units:", min_value=0, value=0, step=1)
     event_count = st.number_input("Enter the number of Event Tax Units:", min_value=0, value=0, step=1)
 
-    # Step 4: Calculate Total Whitezone and Event Taxes
+    # Calculate total whitezone and event taxes
     total_whitezone_tax = whitezone_count * 50
     total_event_tax = event_count * 50
-
-    # Step 5: Calculate Pendapatan Bersih (Net Income after deductions)
-    PENDAPATAN_BERSIH = adjusted_income - total_first_aid_cost - total_whitezone_tax - total_event_tax
 
     # Display Results
     st.markdown("---")
@@ -140,5 +134,8 @@ elif selected == "🧮 Calculator V2 BETA – (If You Don't Remember First Aid C
         st.metric(label="Total Whitezone Tax", value=f"RM {total_whitezone_tax}")
         st.metric(label="Total Event Tax", value=f"RM {total_event_tax}")
 
-    # Final Output
+    # Calculate Pendapatan Bersih (Net Income after taxes and first aid cost)
+    total_tax = total_whitezone_tax + total_event_tax
+    PENDAPATAN_BERSIH = pendapatan_kasar - total_first_aid_cost - total_tax
+
     st.markdown("<div class='highlighted'>💰 Pendapatan Bersih: RM {}</div>".format(int(PENDAPATAN_BERSIH)), unsafe_allow_html=True)
