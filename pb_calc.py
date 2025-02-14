@@ -62,7 +62,7 @@ st.markdown("---")
 with st.sidebar:
     selected = option_menu(
         "📌 Choose Your Calculator",
-        ["🩺 Calculator V1 – (If You Remember First Aid Count)", "🧮 Calculator V2 BETA – (If You Don't Remember First Aid Count)"],
+        ["🩺 Calculator V1 – (If You Remember First Aid Count)", "🧮 Calculator V2 BETA – (Best used if you're taking cases in Bandar. Not Recommended to be used in SS/PB cases)"],
         icons=["calculator", "clipboard-list"],
         menu_icon="layers",
         default_index=0,
